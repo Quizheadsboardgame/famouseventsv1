@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/66kZVj7.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "What year did the Titanic sink?", answer: "1912" },
+            { question: "Who was the first president of the United States?", answer: "George Washington" },
+            { question: "What year did World War I begin?", answer: "1914" },
+            { question: "When did the Berlin Wall fall?", answer: "1989" },
+            { question: "Who was the British Prime Minister during World War II?", answer: "Winston Churchill" },
+            { question: "What year did the moon landing occur?", answer: "1969" },
+            { question: "Who was the leader of the Soviet Union during the Cuban Missile Crisis?", answer: "Nikita Khrushchev" },
+            { question: "What event marked the beginning of the Great Depression?", answer: "The Stock Market Crash of 1929" },
+            { question: "Who was assassinated in Dallas in 1963?", answer: "John F. Kennedy" },
+            { question: "What year did the United States declare independence?", answer: "1776" },
+            { question: "Who was the first man to walk on the moon?", answer: "Neil Armstrong" },
+            { question: "What was the main cause of the American Civil War?", answer: "Slavery" },
+            { question: "What year did the Soviet Union collapse?", answer: "1991" },
+            { question: "Who was the first female Prime Minister of the United Kingdom?", answer: "Margaret Thatcher" },
+            { question: "What event triggered the start of World War II?", answer: "The invasion of Poland by Germany in 1939" },
+            { question: "What was the name of the first artificial satellite launched into space?", answer: "Sputnik" },
+            { question: "When did the French Revolution begin?", answer: "1789" },
+            { question: "What was the primary objective of the Apollo 11 mission?", answer: "To land a man on the moon" },
+            { question: "Who was the leader of the civil rights movement in the 1960s?", answer: "Martin Luther King Jr." },
+            { question: "What major event occurred on September 11, 2001?", answer: "The terrorist attacks on the World Trade Center and Pentagon" },
+            { question: "Who was the leader of Nazi Germany during World War II?", answer: "Adolf Hitler" },
+            { question: "What year was the Declaration of Independence signed?", answer: "1776" },
+            { question: "What was the name of the ship that carried the Pilgrims to America in 1620?", answer: "The Mayflower" },
+            { question: "What major event happened in 1945?", answer: "The end of World War II" },
+            { question: "Who was the first African American President of the United States?", answer: "Barack Obama" },
+            { question: "What was the name of the U.S. military operation that began the Iraq War in 2003?", answer: "Operation Iraqi Freedom" },
+            { question: "When did the Cold War end?", answer: "1991" },
+            { question: "Who was the leader of South Africa’s anti-apartheid movement?", answer: "Nelson Mandela" },
+            { question: "What was the main goal of the women's suffrage movement in the early 20th century?", answer: "To secure voting rights for women" },
+            { question: "What year was the United Nations founded?", answer: "1945" },
+            { question: "What significant event occurred in 1989 in Tiananmen Square?", answer: "The Tiananmen Square protests" },
+            { question: "Who was the famous inventor of the light bulb?", answer: "Thomas Edison" },
+            { question: "What was the name of the ship that brought the first European settlers to Australia?", answer: "The Endeavour" },
+            { question: "When did the Korean War take place?", answer: "1950-1953" },
+            { question: "What was the major economic event that occurred in 1929?", answer: "The Great Depression" },
+            { question: "Who was the first emperor of China?", answer: "Qin Shi Huang" },
+            { question: "What year was the Berlin Wall constructed?", answer: "1961" },
+            { question: "What historic event took place on July 20, 1969?", answer: "The Apollo 11 moon landing" },
+            { question: "Who was the last Tsar of Russia?", answer: "Nicholas II" },
+            { question: "What was the name of the U.S. program that aimed to defeat Nazi Germany during World War II?", answer: "The Manhattan Project" },
+            { question: "What was the significance of the Magna Carta, signed in 1215?", answer: "It limited the powers of the monarchy and laid the foundation for modern democracy" },
+            { question: "What major event is associated with the fall of Constantinople in 1453?", answer: "The end of the Byzantine Empire" },
+            { question: "Who was the famous British explorer who discovered Australia?", answer: "James Cook" },
+            { question: "When was the Declaration of the Rights of Man and of the Citizen adopted?", answer: "1789" },
+            { question: "What was the name of the conflict between the U.S. and the Soviet Union that lasted for most of the 20th century?", answer: "The Cold War" },
+            { question: "What was the name of the ship that was famously sunk by an iceberg in 1912?", answer: "The Titanic" },
+            { question: "Who was the leader of the Soviet Union during the Cuban Missile Crisis?", answer: "Nikita Khrushchev" },
+            { question: "What event marked the end of the Cold War?", answer: "The fall of the Berlin Wall" },
+            { question: "What year did the Russian Revolution occur?", answer: "1917" },
+            { question: "Who was the first person to climb Mount Everest?", answer: "Sir Edmund Hillary and Tenzing Norgay" },
+            { question: "What was the main cause of the American Revolutionary War?", answer: "Colonial resistance to British rule and taxation" },
+            { question: "What year was the first successful test of the atomic bomb?", answer: "1945" },
+            { question: "Who was the U.S. President during the majority of World War I?", answer: "Woodrow Wilson" },
+            { question: "What major global event occurred in 1929?", answer: "The Great Depression" },
+            { question: "What was the name of the U.S. space mission that ended in tragedy with the loss of all crew members?", answer: "Apollo 1" },
+            { question: "What was the primary purpose of the Marshall Plan?", answer: "To provide economic aid to help rebuild Europe after World War II" },
+            { question: "What year did the U.S. enter World War I?", answer: "1917" },
+            { question: "Who was the leader of the Chinese Communist Party during the Chinese Revolution?", answer: "Mao Zedong" },
+            { question: "What was the main focus of the 1964 Civil Rights Act in the United States?", answer: "To end segregation and discrimination based on race, color, religion, sex, or national origin" },
+            { question: "What was the name of the military alliance formed by the U.S. and its allies during the Cold War?", answer: "NATO" },
+            { question: "What was the historical significance of the Magna Carta?", answer: "It limited the power of the English monarch and laid the foundation for constitutional governance" },
+            { question: "What event is commonly associated with the start of the Space Age?", answer: "The launch of Sputnik by the Soviet Union in 1957" },
+            { question: "Who was the leader of the Soviet Union during World War II?", answer: "Joseph Stalin" },
+            { question: "What was the main cause of the American Civil War?", answer: "Slavery" },
+            { question: "What event marked the beginning of the European Renaissance?", answer: "The fall of Constantinople in 1453" },
+            { question: "Who was the famous leader of the Indian independence movement?", answer: "Mahatma Gandhi" },
+            { question: "What year did the United States first land a man on the moon?", answer: "1969" },
+            { question: "What was the primary goal of the Crusades?", answer: "To reclaim the Holy Land from Muslim control" },
+            { question: "What year was the end of apartheid in South Africa?", answer: "1994" },
+            { question: "Who was the first person to reach the North Pole?", answer: "Robert Peary" },
+            { question: "What year did the American Revolutionary War end?", answer: "1783" },
+            { question: "What was the name of the first manned mission to the Moon?", answer: "Apollo 11" },
+            { question: "Who was the leader of the French Revolution?", answer: "Maximilien Robespierre" },
+            { question: "What event is known as the 'shot heard 'round the world'?", answer: "The opening battle of the American Revolutionary War at Lexington and Concord" },
+            { question: "What was the primary goal of the Manhattan Project?", answer: "To develop the atomic bomb" },
+            { question: "Who was the leader of the Cuban Revolution?", answer: "Fidel Castro" },
+            { question: "What major event occurred in 1989 in Tiananmen Square?", answer: "The Tiananmen Square protests" },
+            { question: "What was the name of the campaign that sought to eradicate smallpox?", answer: "The Global Smallpox Eradication Campaign" },
+            { question: "Who was the leader of the Ottoman Empire during World War I?", answer: "Mehmed V" },
+            { question: "What year did the U.S. formally end its involvement in the Vietnam War?", answer: "1973" },
+            { question: "What was the primary goal of the Apollo 13 mission?", answer: "To land on the Moon, though it was aborted due to an in-flight emergency" },
+            { question: "Who was the famous British Prime Minister during World War II?", answer: "Winston Churchill" },
+            { question: "What major political event occurred in Germany in 1933?", answer: "The rise of Adolf Hitler and the Nazi Party" },
+            { question: "What year did the Soviet Union launch the first artificial satellite?", answer: "1957" },
+            { question: "Who was the famous American civil rights leader known for his 'I Have a Dream' speech?", answer: "Martin Luther King Jr." },
+            { question: "What year was the Berlin Wall erected?", answer: "1961" },
+            { question: "What was the name of the ship that brought the Pilgrims to America in 1620?", answer: "The Mayflower" },
+            { question: "Who was the famous leader of the Russian Revolution?", answer: "Vladimir Lenin" }
+        ];
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const question = questionsAndAnswers[randomIndex].question;
+            const answer = questionsAndAnswers[randomIndex].answer;
+
+            document.getElementById('question').textContent = question;
+            document.getElementById('answer').textContent = answer;
+        });
+    </script>
+</body>
+</html>
